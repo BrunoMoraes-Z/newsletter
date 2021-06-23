@@ -5,6 +5,7 @@ import json
 from datetime import datetime
 import time
 import os
+import sys
 
 baseURL = 'https://getnada.com/api/v1'
 
@@ -71,10 +72,17 @@ def getMessages(id):
         message = {}
     return tmp
 
-if getlastMessage() is not None:
-    for m in getMessages(getlastMessage()['uid']):
-        NewsLetterMessage(m['title'], m['content'], '242424').send()
-        time.sleep(1)
+n = len(sys.argv)
+if n == 0:
+    print('Informe o email e Discord WebHook Link')
 else:
-    NewsLetterMessage('teste', 'teste', '242424').send()
-    print('Nenhuma noticia encontrada')
+    os.environ['MAIL_ADDRESS'] = sys.argv[0]
+    os.environ['DISCORD_WEBHOOK'] = sys.argv[1]
+
+    if getlastMessage() is not None:
+        for m in getMessages(getlastMessage()['uid']):
+            NewsLetterMessage(m['title'], m['content'], '242424').send()
+            time.sleep(1)
+    else:
+        NewsLetterMessage('teste', 'teste', '242424').send()
+        print('Nenhuma noticia encontrada')
