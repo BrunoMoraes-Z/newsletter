@@ -1,3 +1,4 @@
 beautifulsoup4
 discord-webhook
 requests
+lxml
