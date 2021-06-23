@@ -1,7 +1,7 @@
 name: Filipe Dechamps
 
 on:
-  schedule: # execute every 12 hours
+  schedule: # executa todos os dias as 11:20 da manha.
     - cron: "20 11 * * *"
   workflow_dispatch:
 
