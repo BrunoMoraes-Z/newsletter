@@ -6,6 +6,7 @@ from datetime import datetime
 import time
 import os
 import sys
+from lxml import html
 
 baseURL = 'https://getnada.com/api/v1'
 
@@ -47,28 +48,38 @@ def getlastMessage():
     data = json.loads(response.text)
     for d in data['msgs']:
         if d['fe'] == 'newsletter@filipedeschamps.com.br':
-            if 'Today' in d['rf']:
+            # if 'Today' in d['rf']:
                 msg = d
     return msg
 
 def getMessages(id):
     response = requests.get(f'{baseURL}/messages/html/{id}')
     soup = BeautifulSoup(response.text, features="html.parser")
-    text = soup.text.replace('\r', '').replace('  ', '').replace('\n\n', '')
-    list = text.split(':\n') if len(text.split(':\n')) > 1 else text.split(': \n')
-    tmp = []
-    for l in list[1:len(list)]:
-        tmp.append(l.split(".\n"))
-        print(l.split(".\n"))
-    list = tmp
-    tmp = []
+    tree = html.fromstring(soup.__str__())
+    result = tree.xpath('//p[text()]')
+    titles = []
+    notices = []
+
+    for r in result:
+        titles.append(r[0].text)
+    
     message = {}
-    for i in list[0]:
-        message['title'] = i.split(': ')[0]
-        message['content'] = i.split(': ')[1].split('\r\n')[0]
-        tmp.append(message)
+    for t in titles:
+        result = tree.xpath(f'//strong[text()="{t}"]/../text()')
+        message['title'] = str(t)
+        message['content'] = str(result[0])
+        notices.append(message)
         message = {}
-    return tmp
+
+    result = tree.xpath(f'//strong/../a/..')
+    for r in result:
+        notices.remove(next(item for item in notices if item["title"] == r[0].text))
+
+    notices.remove(next(item for item in notices if 'Notícias que chamaram' in item["title"]))
+
+    print(notices)
+
+    return notices
 
 n = len(sys.argv)
 if n == 0:
@@ -79,7 +90,7 @@ else:
 
     if getlastMessage() is not None:
         for m in getMessages(getlastMessage()['uid']):
-            NewsLetterMessage(m['title'], m['content'], '242424').send()
+            NewsLetterMessage(m['title'].replace(':', ''), m['content'].replace(': ', ''), '242424').send()
             time.sleep(1)
     else:
         print('Nenhuma noticia encontrada')
