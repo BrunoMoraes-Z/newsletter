@@ -15,7 +15,7 @@ class NewsLetterMessage:
         self.message = message
         self.color = color
         self.url = os.getenv('DISCORD_WEBHOOK')
-        if self.url.contains(','):
+        if ',' in self.url:
             self.url = self.url.split(',')
 
     def send(self):
