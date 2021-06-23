@@ -76,8 +76,10 @@ n = len(sys.argv)
 if n == 0:
     print('Informe o email e Discord WebHook Link')
 else:
-    os.environ['MAIL_ADDRESS'] = sys.argv[0]
-    os.environ['DISCORD_WEBHOOK'] = sys.argv[1]
+    os.environ['MAIL_ADDRESS'] = sys.argv[1]
+    os.environ['DISCORD_WEBHOOK'] = sys.argv[2]
+    for f in sys.argv:
+        print(f)
 
     if getlastMessage() is not None:
         for m in getMessages(getlastMessage()['uid']):
