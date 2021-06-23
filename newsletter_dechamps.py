@@ -16,7 +16,6 @@ class NewsLetterMessage:
         self.message = message
         self.color = color
         self.url = os.environ.get('DISCORD_WEBHOOK')
-        print(f'URL: {self.url}')
         if ',' in self.url:
             self.url = self.url.split(',')
 
@@ -44,7 +43,6 @@ class NewsLetterMessage:
 def getlastMessage():
     msg = None
     mail = os.environ.get('MAIL_ADDRESS')
-    print(f'Mail: {mail}')
     response = requests.get(f'{baseURL}/inboxes/{mail}')
     data = json.loads(response.text)
     for d in data['msgs']:
@@ -78,13 +76,10 @@ if n == 0:
 else:
     os.environ['MAIL_ADDRESS'] = sys.argv[1]
     os.environ['DISCORD_WEBHOOK'] = sys.argv[2]
-    for f in sys.argv:
-        print(f)
 
     if getlastMessage() is not None:
         for m in getMessages(getlastMessage()['uid']):
             NewsLetterMessage(m['title'], m['content'], '242424').send()
             time.sleep(1)
     else:
-        NewsLetterMessage('teste', 'teste', '242424').send()
         print('Nenhuma noticia encontrada')
