@@ -15,6 +15,7 @@ class NewsLetterMessage:
         self.message = message
         self.color = color
         self.url = os.getenv('DISCORD_WEBHOOK')
+        print(f'URL: {self.url}')
         if ',' in self.url:
             self.url = self.url.split(',')
 
@@ -42,6 +43,7 @@ class NewsLetterMessage:
 def getlastMessage():
     msg = None
     mail = os.getenv('MAIL_ADDRESS')
+    print(f'Mail: {mail}')
     response = requests.get(f'{baseURL}/inboxes/{mail}')
     data = json.loads(response.text)
     for d in data['msgs']:
