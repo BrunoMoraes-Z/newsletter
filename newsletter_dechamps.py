@@ -48,7 +48,7 @@ def getlastMessage():
     data = json.loads(response.text)
     for d in data['msgs']:
         if d['fe'] == 'newsletter@filipedeschamps.com.br':
-            # if 'Today' in d['rf']:
+            if 'Today' in d['rf']:
                 msg = d
     return msg
 
