@@ -49,7 +49,8 @@ def getlastMessage():
     for d in data['msgs']:
         if d['fe'] == 'newsletter@filipedeschamps.com.br':
             if 'Today' in d['rf']:
-                msg = d
+                if "ru" not in d:
+                    msg = d
     return msg
 
 def getMessages(id):
