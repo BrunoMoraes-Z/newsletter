@@ -76,7 +76,13 @@ def getMessages(id):
     for r in result:
         notices.remove(next(item for item in notices if item["title"] == r[0].text))
 
-    notices.remove(next(item for item in notices if 'Notícias que chamaram' in item["title"]))
+    print(len(notices))
+
+    if len(notices) > 0:
+        dias = ['segunda', 'terça', 'quarta', 'quinta', 'sexta']
+        for d in dias:
+            if d in notices[0]['title'].lower():
+                notices = notices[1::]
 
     print(notices)
 
@@ -88,9 +94,9 @@ if n == 0:
 else:
     os.environ['MAIL_ADDRESS'] = sys.argv[1]
     os.environ['DISCORD_WEBHOOK'] = sys.argv[2]
-
-    if getlastMessage() is not None:
-        for m in getMessages(getlastMessage()['uid']):
+    lastMessage = getlastMessage()
+    if lastMessage is not None:
+        for m in getMessages(lastMessage['uid']):
             NewsLetterMessage(m['title'].replace(':', ''), m['content'].replace(': ', ''), '242424').send()
             time.sleep(1)
     else:
