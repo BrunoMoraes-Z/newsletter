@@ -10,6 +10,9 @@ jobs:
   read_news:
     name: Read All news in Filipe Dechamps Newsletter
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        name: [c1, c2]
     steps:
       - uses: actions/checkout@v2
       
@@ -18,6 +21,10 @@ jobs:
         with:
           python-version: 3.9
           architecture: 'x64'
+          
+      - name: teste
+        run: echo  oi
+        if: ${{ matrix.name }} == 'c1'
           
       - name: Install Depencies
         run: |
