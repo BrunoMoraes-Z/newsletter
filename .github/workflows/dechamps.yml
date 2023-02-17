@@ -23,8 +23,8 @@ jobs:
           architecture: 'x64'
           
       - name: teste
-        run: echo  oi
         if: ${{ matrix.name }} == 'c1'
+        run: echo  oi
           
       - name: Install Depencies
         run: |
